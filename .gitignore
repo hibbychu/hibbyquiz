@@ -1,0 +1,86 @@
+# -------------------------------------
+# Node / TypeScript / Monorepo
+# -------------------------------------
+node_modules/
+dist/
+build/
+tmp/
+temp/
+.cache/
+turbo/
+*.tsbuildinfo
+
+# -------------------------------------
+# Environment Variables
+# -------------------------------------
+.env
+.env.*.local
+.env.local
+.env.development.local
+.env.production.local
+
+# -------------------------------------
+# Logs
+# -------------------------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# -------------------------------------
+# OS Files
+# -------------------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------------------
+# IDE / Editor Files
+# -------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# -------------------------------------
+# Frontend (React + Vite)
+# -------------------------------------
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+*.local
+
+# -------------------------------------
+# Backend Microservices
+# -------------------------------------
+services/**/node_modules/
+services/**/dist/
+services/**/.cache/
+services/**/uploads/
+
+# -------------------------------------
+# Output Files (your processing services)
+# -------------------------------------
+*.txt
+*.docx
+output/
+generated/
+processed/
+
+# -------------------------------------
+# Docker
+# -------------------------------------
+docker/*.pid
+docker/data/
+docker-volumes/
+*.bak
+
+# -------------------------------------
+# Mac / Linux / Windows
+# -------------------------------------
+*.swp
+*.tmp
+*.pid
+*.seed
+*.pid

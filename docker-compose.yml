@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+  pdf-service:
+    build: ./services/pdf-service
+    ports:
+      - "5001:5001"
+  ai-service:
+    build: ./services/ai-service
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./services/ai-service/.env
+  file-processor-service:
+    build: ./services/file-processor-service
+    ports:
+      - "5003:5003"
+  orchestrator:
+    build: ./orchestrator
+    ports:
+      - "4000:4000"

@@ -1,23 +1,24 @@
 import express from "express";
-import { saveTextFile, saveDocxFile } from "./fileHandler";
 
 const app = express();
 app.use(express.json());
 
 app.post("/save", async (req, res) => {
   try {
-    const { text, aiOutput, fileName } = req.body;
-    if (!text || !aiOutput || !fileName) return res.status(400).send("Missing data");
+    const { text, aiOutput } = req.body;
+    if (!text || !aiOutput) return res.status(400).send("Missing data");
 
-    const txtPath = await saveTextFile(fileName, text);
-    const docxPath = await saveDocxFile(fileName, aiOutput);
-
-    res.json({ txtPath, docxPath });
+    // Just send the text back, don't save files
+    res.json({
+      txtContent: text,
+      docxContent: aiOutput,
+    });
   } catch (err) {
-    res.status(500).json({ error: "Failed to save files" });
+    res.status(500).json({ error: "Failed to process files" });
   }
 });
 
-app.listen(5003, () => {
-  console.log("File Processor service running on port 5003");
+const PORT = 5003;
+app.listen(PORT, () => {
+  console.log(`File Processor Service running on port ${PORT}`);
 });

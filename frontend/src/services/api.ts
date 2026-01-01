@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:4000"; // Orchestrator endpoint
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 export const uploadPDF = async (file: File) => {
   const formData = new FormData();

@@ -9,26 +9,12 @@ fs.ensureDirSync(OUTPUT_DIR);
  * Save plain text as .txt
  */
 export async function saveTextFile(fileName: string, text: string): Promise<string> {
-  const filePath = path.join(OUTPUT_DIR, `${fileName}.txt`);
-  await fs.writeFile(filePath, text, "utf-8");
-  return filePath;
+  // Just return the text, no need to write a file
+  return text;
 }
 
-/**
- * Save AI output as .docx
- */
 export async function saveDocxFile(fileName: string, text: string): Promise<string> {
-  const doc = new Document({
-    sections: [
-      {
-        properties: {},
-        children: [new Paragraph(text)],
-      },
-    ],
-  });
-
-  const buffer = await Packer.toBuffer(doc);
-  const filePath = path.join(OUTPUT_DIR, `${fileName}.docx`);
-  await fs.writeFile(filePath, buffer);
-  return filePath;
+  // Just return the text (the "AI output")
+  return text;
 }
+

@@ -1,24 +1,48 @@
-version: '3.8'
+version: "3.9"
+
 services:
   frontend:
     build: ./frontend
     ports:
       - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:4000
+    depends_on:
+      - orchestrator
+
+  orchestrator:
+    build: ./orchestrator
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./services/outputs:/app/services/outputs
+    environment:
+      - PDF_SERVICE=http://pdf-service:5001/extract
+      - AI_SERVICE=http://ai-service:5002/generate
+      - FILE_SERVICE=http://file-processor-service:5003/save
+    depends_on:
+      - pdf-service
+      - ai-service
+      - file-processor-service
+
   pdf-service:
     build: ./services/pdf-service
     ports:
       - "5001:5001"
+    volumes:
+      - ./services/pdf-service/uploads:/app/uploads
+
   ai-service:
     build: ./services/ai-service
     ports:
       - "5002:5002"
     env_file:
       - ./services/ai-service/.env
+
   file-processor-service:
     build: ./services/file-processor-service
     ports:
       - "5003:5003"
-  orchestrator:
-    build: ./orchestrator
-    ports:
-      - "4000:4000"
+    volumes:
+      - ./services/outputs:/app/outputs
+

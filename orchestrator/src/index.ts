@@ -3,18 +3,26 @@ import multer from "multer";
 import axios from "axios";
 import cors from "cors";
 import FormData from "form-data";
+import path from "path";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Serve static files from outputs folder
+app.use("/outputs", express.static("/app/services/outputs"));
+
+app.get("/outputs/:fileName", (req, res, next) => {
+  console.log("Requesting file:", req.params.fileName);
+  next();
+});
 
 // Use memory storage so we can access req.file.buffer
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Microservice URLs
-const PDF_SERVICE = "http://localhost:5001/extract";
-const AI_SERVICE = "http://localhost:5002/generate";
-const FILE_SERVICE = "http://localhost:5003/save";
+const PDF_SERVICE = process.env.PDF_SERVICE!;
+const AI_SERVICE = process.env.AI_SERVICE!;
+const FILE_SERVICE = process.env.FILE_SERVICE!;
 
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
@@ -37,15 +45,16 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     const aiOutput = aiResponse.data.aiOutput;
 
     // 3️⃣ Send text + AI output to File Processor service
-    const fileForm = {
-      text: extractedText,
-      aiOutput,
-      fileName: req.file.originalname.split(".")[0],
-    };
-
+    const fileForm = { text: extractedText, aiOutput };
     const fileResponse = await axios.post(FILE_SERVICE, fileForm);
 
-    res.json(fileResponse.data);
+    // 4️⃣ Send everything to frontend
+    res.json({
+      originalText: extractedText,
+      aiOutput: aiOutput,
+      processedText: fileResponse.data.txtContent,
+      processedAI: fileResponse.data.docxContent,
+    });
   } catch (err: any) {
     console.error("Orchestrator error:", err.response?.data || err.message);
     res.status(500).json({ error: "Failed to process PDF" });
